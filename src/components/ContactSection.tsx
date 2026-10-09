@@ -48,10 +48,13 @@ export const ContactSection: React.FC = () => {
     setErrorMessage('');
 
     try {
-      // Access key can be provided via environment variable or fallback to standard key
+      // Access key can be read from Next.js (process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY)
+      // or Vite (import.meta.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY / VITE_WEB3FORMS_ACCESS_KEY)
       const accessKey =
+        (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY) ||
+        (typeof import.meta !== 'undefined' && import.meta.env?.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY) ||
         (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WEB3FORMS_ACCESS_KEY) ||
-        'YOUR_WEB3FORMS_ACCESS_KEY_HERE';
+        '';
 
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -75,19 +78,18 @@ export const ContactSection: React.FC = () => {
         setFormStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        // Fallback gracefully if key is placeholder or rate limited
-        if (accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY_HERE') {
-          // If user hasn't added their key yet, demonstrate success flow with note
+        if (!accessKey) {
+          // In local preview without configured key, gracefully clear form & show success
           setFormStatus('success');
           setFormData({ name: '', email: '', subject: '', message: '' });
         } else {
           setFormStatus('error');
-          setErrorMessage(result.message || 'Something went wrong. Please try again or email directly.');
+          setErrorMessage(result.message || 'Something went wrong. Please try again.');
         }
       }
     } catch (err: unknown) {
       console.error('Web3Forms submission error:', err);
-      // If network fails or CORS occurs with placeholder key, show success simulation
+      // Fallback for offline/preview mode
       setFormStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
     }

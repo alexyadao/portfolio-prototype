@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Project, ProjectLifecyclePhase, ProjectMetrics } from '../types';
 import { TechStackRadarChart } from './TechStackRadarChart';
 import { ProjectDiagramGallery } from './ProjectDiagramGallery';
+import { ProjectHeaderIllustration } from './ProjectHeaderIllustration';
 import {
   X,
   Layers,
@@ -21,14 +22,30 @@ import {
   Milestone,
   Workflow,
   Sparkles,
+  ExternalLink,
+  Network,
+  Cpu,
+  Radio,
+  Terminal,
 } from 'lucide-react';
 
 interface ProjectModalProps {
   project: Project | null;
   onClose: () => void;
+  onOpenNetworkTopology?: () => void;
+  onOpenICTester?: () => void;
+  onOpenIoTDashboard?: () => void;
+  onOpenApiTester?: () => void;
 }
 
-export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+export const ProjectModal: React.FC<ProjectModalProps> = ({
+  project,
+  onClose,
+  onOpenNetworkTopology,
+  onOpenICTester,
+  onOpenIoTDashboard,
+  onOpenApiTester,
+}) => {
   // Toggle between 'specs' (Specifications & Blueprint) and 'gallery' (Visual Diagrams & Flowcharts)
   const [activeTab, setActiveTab] = useState<'specs' | 'gallery'>('specs');
   const [isCopied, setIsCopied] = useState(false);
@@ -180,14 +197,24 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
 ---
 
 ## 1. Project Scope & Architecture Details
-${project.details}
-
+${project.about || project.details}
+${
+  project.contributions && project.contributions.length > 0
+    ? `\n### Individual Contributions (Academic Engineering Team)\n${project.contributions
+        .map((c) => `- ${c}`)
+        .join('\n')}\n`
+    : ''
+}
 ## 2. Tech Stack Radar & Key Architectural Metrics
-- **Backend Intensity:** ${projectMetrics.backendIntensity}%
+${
+  projectMetrics.customAxes && projectMetrics.customAxes.length > 0
+    ? projectMetrics.customAxes.map((a) => `- **${a.label}:** ${a.value}%`).join('\n')
+    : `- **Backend Intensity:** ${projectMetrics.backendIntensity}%
 - **System Complexity:** ${projectMetrics.systemComplexity}%
 - **Performance Optimization:** ${projectMetrics.performanceOptimization}%
-- **Hardware & Embedded:** ${projectMetrics.hardwareInterfacing ?? 50}%
-- **Security & Reliability:** ${projectMetrics.securityReliability ?? 85}%
+- **${projectMetrics.hardwareAxisLabel || 'Hardware & Embedded'}:** ${projectMetrics.hardwareInterfacing ?? 50}%
+- **Security & Reliability:** ${projectMetrics.securityReliability ?? 85}%`
+}
 
 ## 3. Chronological Development Lifecycle
 ${lifecycleFormatted}
@@ -365,21 +392,84 @@ ${techFormatted}
 
         {/* Modal Body */}
         <div className="overflow-y-auto p-4 sm:p-6 space-y-6">
+          {/* Visual Header Illustration */}
+          <div className="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <ProjectHeaderIllustration projectId={project.id} />
+          </div>
+
           {/* Header Bar */}
           <div>
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-cyan-100 dark:bg-cyan-950/70 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-800/60">
-                <span>Role: {project.role}</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-cyan-100 dark:bg-cyan-950/70 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-800/60">
+                  <span>Role: {project.role}</span>
+                </div>
+
+                {/* Reading time estimate badge */}
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700">
+                  <Clock className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
+                  <span>{readingTimeText}</span>
+                  <span className="text-zinc-400 dark:text-zinc-500 text-[10px]">
+                    ({wordCount} words)
+                  </span>
+                </div>
               </div>
 
-              {/* Reading time estimate badge */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700">
-                <Clock className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
-                <span>{readingTimeText}</span>
-                <span className="text-zinc-400 dark:text-zinc-500 text-[10px]">
-                  ({wordCount} words)
-                </span>
-              </div>
+              {(project.liveUrl || project.liveDemoUrl) && (
+                <a
+                  href={project.liveUrl || project.liveDemoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 hover:from-teal-400 hover:to-blue-500 shadow-md shadow-cyan-500/20 transition-all hover:scale-105"
+                >
+                  <span>Launch Live Demo</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
+
+              {project.interactiveDemoId === 'network-topology' && onOpenNetworkTopology && (
+                <button
+                  type="button"
+                  onClick={() => onOpenNetworkTopology()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-cyan-500 via-indigo-600 to-blue-600 hover:from-cyan-400 hover:via-indigo-500 hover:to-blue-500 shadow-md shadow-cyan-500/20 transition-all hover:scale-105 cursor-pointer"
+                >
+                  <Network className="w-3.5 h-3.5" />
+                  <span>Launch Network Map</span>
+                </button>
+              )}
+
+              {project.interactiveDemoId === 'ic-tester' && onOpenICTester && (
+                <button
+                  type="button"
+                  onClick={() => onOpenICTester()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-400 hover:via-teal-500 hover:to-cyan-500 shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer"
+                >
+                  <Cpu className="w-3.5 h-3.5" />
+                  <span>Run Hardware Simulator</span>
+                </button>
+              )}
+
+              {project.interactiveDemoId === 'iot-dashboard' && onOpenIoTDashboard && (
+                <button
+                  type="button"
+                  onClick={() => onOpenIoTDashboard()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-amber-500 via-teal-600 to-cyan-600 hover:from-amber-400 hover:via-teal-500 hover:to-cyan-500 shadow-md shadow-teal-500/20 transition-all hover:scale-105 cursor-pointer"
+                >
+                  <Radio className="w-3.5 h-3.5" />
+                  <span>Open IoT Dashboard</span>
+                </button>
+              )}
+
+              {project.interactiveDemoId === 'api-tester' && onOpenApiTester && (
+                <button
+                  type="button"
+                  onClick={() => onOpenApiTester()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:via-indigo-500 hover:to-cyan-500 shadow-md shadow-indigo-500/20 transition-all hover:scale-105 cursor-pointer"
+                >
+                  <Terminal className="w-3.5 h-3.5" />
+                  <span>Test API Endpoints</span>
+                </button>
+              )}
             </div>
 
             <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
@@ -394,28 +484,183 @@ ${techFormatted}
             </div>
           ) : (
             <div className="space-y-6 animate-in fade-in duration-300">
-              {/* Project Details Section with Reading Time Indicator */}
-              <div className="bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-cyan-700 dark:text-cyan-400 flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5" />
-                    <span>Project Scope &amp; Implementation Details</span>
-                  </h3>
+              {/* Clean Two-Column Layout (About & Contributions on Left, Links/Role/Tech on Right) */}
+              {project.contributions && project.contributions.length > 0 ? (
+                <div className="bg-zinc-50/70 dark:bg-zinc-950/70 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-5 sm:p-6 shadow-xs">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
+                    {/* Left Column (About & Contributions) */}
+                    <div className="md:col-span-7 space-y-6">
+                      {/* About Section */}
+                      <div>
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100 mb-2 flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-cyan-500" />
+                          <span>About</span>
+                        </h3>
+                        <p className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                          {project.description || project.about || project.details}
+                        </p>
+                      </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('gallery')}
-                    className="inline-flex items-center gap-1 text-[11px] font-mono text-cyan-600 dark:text-cyan-400 hover:underline bg-cyan-50 dark:bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-200/80 dark:border-cyan-800/50"
-                  >
-                    <Workflow className="w-3 h-3" />
-                    <span>View Diagrams ({diagramCount})</span>
-                  </button>
+                      {/* Contributions Section */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4 text-emerald-500" />
+                            <span>Contributions</span>
+                          </h3>
+                          <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded-full border border-cyan-200 dark:border-cyan-800/60">
+                            Academic Engineering Team
+                          </span>
+                        </div>
+
+                        <ul className="space-y-2.5">
+                          {project.contributions.map((contribution, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-3 p-3 rounded-xl bg-white dark:bg-zinc-900/90 border border-zinc-200/90 dark:border-zinc-800 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed transition-all hover:border-cyan-500/40"
+                            >
+                              <span className="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400 mt-1.5 shrink-0 ring-4 ring-cyan-500/20" />
+                              <span>{contribution}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Right Column (Links, Role, & Technologies) */}
+                    <div className="md:col-span-5 space-y-6 md:border-l md:border-zinc-200 dark:md:border-zinc-800 md:pl-6">
+                      {/* Links Section (Only rendered if liveUrl, liveDemoUrl, or githubUrl exists; completely removed if none) */}
+                      {(project.liveUrl || project.liveDemoUrl || project.githubUrl) && (
+                        <div>
+                          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2.5 flex items-center gap-1.5">
+                            <ExternalLink className="w-3.5 h-3.5 text-cyan-500" />
+                            <span>Links</span>
+                          </h3>
+                          <div className="flex flex-wrap gap-2">
+                            {(project.liveUrl || project.liveDemoUrl) && (
+                              <a
+                                href={project.liveUrl || project.liveDemoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 hover:from-teal-400 hover:to-blue-500 transition-all shadow-xs"
+                              >
+                                <span>Live App</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                            {project.githubUrl && (
+                              <a
+                                href={project.githubUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-700 transition-all"
+                              >
+                                <span>GitHub Repository</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Role Section */}
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2 flex items-center gap-1.5">
+                          <Cpu className="w-3.5 h-3.5 text-cyan-500" />
+                          <span>Role</span>
+                        </h3>
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/70 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-800/80 shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                          <span>{project.subtitle || project.role}</span>
+                        </div>
+                      </div>
+
+                      {/* Technologies Section */}
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2.5 flex items-center gap-1.5">
+                          <Code2 className="w-3.5 h-3.5 text-indigo-500" />
+                          <span>Technologies</span>
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {(project.technologies || project.techStack || project.tags || []).map((tech, idx) => (
+                            <span
+                              key={idx}
+                              className="px-3 py-1.5 rounded-xl text-xs font-mono font-medium bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700/80 text-zinc-800 dark:text-zinc-200 hover:border-cyan-500/50 transition-colors shadow-2xs"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Interactive Hardware Simulator Launcher Button */}
+                      {project.interactiveDemoId === 'ic-tester' && onOpenICTester && (
+                        <div className="pt-2 border-t border-zinc-200/80 dark:border-zinc-800">
+                          <button
+                            type="button"
+                            onClick={() => onOpenICTester()}
+                            className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-400 hover:via-teal-500 hover:to-cyan-500 shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.01] cursor-pointer"
+                          >
+                            <Cpu className="w-4 h-4" />
+                            <span>Launch Interactive IC Tester Simulator</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Interactive IoT Telemetry Dashboard Launcher Button */}
+                      {project.interactiveDemoId === 'iot-dashboard' && onOpenIoTDashboard && (
+                        <div className="pt-2 border-t border-zinc-200/80 dark:border-zinc-800">
+                          <button
+                            type="button"
+                            onClick={() => onOpenIoTDashboard()}
+                            className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-amber-500 via-teal-600 to-cyan-600 hover:from-amber-400 hover:via-teal-500 hover:to-cyan-500 shadow-md shadow-teal-500/20 transition-all hover:scale-[1.01] cursor-pointer"
+                          >
+                            <Radio className="w-4 h-4" />
+                            <span>Launch Live Arduino IoT Dashboard</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Interactive API Testing Suite Launcher Button */}
+                      {project.interactiveDemoId === 'api-tester' && onOpenApiTester && (
+                        <div className="pt-2 border-t border-zinc-200/80 dark:border-zinc-800">
+                          <button
+                            type="button"
+                            onClick={() => onOpenApiTester()}
+                            className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:via-indigo-500 hover:to-cyan-500 shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.01] cursor-pointer"
+                          >
+                            <Terminal className="w-4 h-4" />
+                            <span>Launch Interactive API Testing Suite</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                /* Fallback standard Project Details Section */
+                <div className="bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-cyan-700 dark:text-cyan-400 flex items-center gap-1.5">
+                      <Layers className="w-3.5 h-3.5" />
+                      <span>Project Scope &amp; Implementation Details</span>
+                    </h3>
 
-                <p className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
-                  {project.details}
-                </p>
-              </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('gallery')}
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-cyan-600 dark:text-cyan-400 hover:underline bg-cyan-50 dark:bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-200/80 dark:border-cyan-800/50"
+                    >
+                      <Workflow className="w-3 h-3" />
+                      <span>View Diagrams ({diagramCount})</span>
+                    </button>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                    {project.details}
+                  </p>
+                </div>
+              )}
 
               {/* Tech Stack Radar Chart */}
               <TechStackRadarChart metrics={projectMetrics} />

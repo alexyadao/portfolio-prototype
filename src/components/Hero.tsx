@@ -16,10 +16,9 @@ import {
 
 interface HeroProps {
   onOpenTerminal: () => void;
-  onOpenResume?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenTerminal }) => {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = () => {
@@ -99,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
               <span>{PERSONAL_INFO.address}</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 text-indigo-700 dark:text-indigo-300 text-xs font-mono backdrop-blur-md">
+            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 text-indigo-700 dark:text-indigo-300 text-xs font-mono backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
               <span>Polytechnic University of the Philippines</span>
             </div>
@@ -154,20 +153,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
                   <Terminal className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                   <span>Launch CLI Terminal</span>
                 </motion.button>
-
-                {onOpenResume && (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="button"
-                    onClick={onOpenResume}
-                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium text-zinc-800 dark:text-zinc-200 bg-white/80 dark:bg-zinc-900/60 hover:bg-zinc-50 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all shadow-sm dark:shadow-md backdrop-blur-md"
-                    title="View curriculum vitae"
-                  >
-                    <Layers className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
-                    <span>View CV</span>
-                  </motion.button>
-                )}
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -234,8 +219,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
                   <div className="relative rounded-xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800/80 shadow-md group/img bg-gradient-to-b from-zinc-100 to-zinc-200 dark:from-zinc-950 dark:to-zinc-900">
                     <img
                       src="/profile.png"
+                      onError={(e) => {
+                        e.currentTarget.src = '/profile.png';
+                      }}
                       alt="Alexander Christian R. Yadao"
-                      className="w-full h-64 sm:h-72 lg:h-64 object-cover object-top transition-transform duration-700 ease-out group-hover/img:scale-[1.03]"
+                      className="w-full h-100 sm:h-300 lg:h-100 object-cover object-top transition-transform duration-700 ease-out group-hover/img:scale-[1.03]"
                     />
 
                     {/* Gradient Overlay & Telemetry Micro-Badge */}
@@ -243,7 +231,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
                     <div className="absolute bottom-3 left-3 right-3 text-white flex items-end justify-between pointer-events-none">
                       <div>
                         <p className="text-xs font-mono font-semibold tracking-tight text-white drop-shadow-sm">
-                          Alexander C. R. Yadao
+                          Alexander Christian R. Yadao
                         </p>
                         <p className="text-[10px] font-mono text-cyan-300 drop-shadow-sm">
                           Software &amp; Backend Engineer

@@ -3,7 +3,7 @@ import { Project } from './types';
 import { PROJECTS } from './data/portfolioData';
 import { ThemeProvider } from './context/ThemeContext';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
-import { DraftBanner } from './components/DraftBanner';
+import { AmbientBackground } from './components/AmbientBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { SectionDivider } from './components/SectionDivider';
@@ -14,12 +14,18 @@ import { InteractiveTerminal } from './components/InteractiveTerminal';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { ProjectModal } from './components/ProjectModal';
-import { ResumeModal } from './components/ResumeModal';
+import { NetworkTopologyModal } from './components/NetworkTopologyModal';
+import { ICTesterModal } from './components/ICTesterModal';
+import { IoTDashboardModal } from './components/IoTDashboardModal';
+import { ApiTesterModal } from './components/ApiTesterModal';
 import { ScrollToTop } from './components/ScrollToTop';
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isResumeOpen, setIsResumeOpen] = useState<boolean>(false);
+  const [isNetworkTopologyOpen, setIsNetworkTopologyOpen] = useState(false);
+  const [isICTesterOpen, setIsICTesterOpen] = useState(false);
+  const [isIoTDashboardOpen, setIsIoTDashboardOpen] = useState(false);
+  const [isApiTesterOpen, setIsApiTesterOpen] = useState(false);
 
   const handleOpenTerminal = () => {
     const el = document.getElementById('terminal');
@@ -30,25 +36,19 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 font-sans selection:bg-indigo-500/20 selection:text-indigo-800 dark:selection:bg-indigo-500/30 dark:selection:text-indigo-200 transition-colors duration-300">
+      <div className="relative overflow-x-hidden w-full min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-indigo-500/20 selection:text-indigo-800 dark:selection:bg-indigo-500/30 dark:selection:text-indigo-200 transition-colors duration-300">
+        {/* Premium ambient animated aurora background with telemetry grid */}
+        <AmbientBackground />
+
         {/* Animated Horizontal Scroll Progress Bar */}
         <ScrollProgressBar />
 
-        {/* Spatial Prototype Status Header */}
-        <DraftBanner />
-
         {/* Sticky navigation with Theme Toggle */}
-        <Navbar
-          onOpenResume={() => setIsResumeOpen(true)}
-          onOpenTerminal={handleOpenTerminal}
-        />
+        <Navbar onOpenTerminal={handleOpenTerminal} />
 
         <main>
           {/* Hero with Alexander's profile & telemetry */}
-          <Hero
-            onOpenTerminal={handleOpenTerminal}
-            onOpenResume={() => setIsResumeOpen(true)}
-          />
+          <Hero onOpenTerminal={handleOpenTerminal} />
 
           {/* Animated Section Divider: Hero -> Projects */}
           <SectionDivider variant="cyan" label="Featured Systems" />
@@ -57,6 +57,10 @@ export default function App() {
           <ProjectsSection
             projects={PROJECTS}
             onSelectProject={(project) => setSelectedProject(project)}
+            onOpenNetworkTopology={() => setIsNetworkTopologyOpen(true)}
+            onOpenICTester={() => setIsICTesterOpen(true)}
+            onOpenIoTDashboard={() => setIsIoTDashboardOpen(true)}
+            onOpenApiTester={() => setIsApiTesterOpen(true)}
           />
 
           {/* Animated Section Divider: Projects -> Skills */}
@@ -94,12 +98,34 @@ export default function App() {
         <ProjectModal
           project={selectedProject}
           onClose={() => setSelectedProject(null)}
+          onOpenNetworkTopology={() => setIsNetworkTopologyOpen(true)}
+          onOpenICTester={() => setIsICTesterOpen(true)}
+          onOpenIoTDashboard={() => setIsIoTDashboardOpen(true)}
+          onOpenApiTester={() => setIsApiTesterOpen(true)}
         />
 
-        {/* Resume / CV Modal */}
-        <ResumeModal
-          isOpen={isResumeOpen}
-          onClose={() => setIsResumeOpen(false)}
+        {/* Interactive Network Topology & Active Directory IT Infrastructure Demo Modal */}
+        <NetworkTopologyModal
+          isOpen={isNetworkTopologyOpen}
+          onClose={() => setIsNetworkTopologyOpen(false)}
+        />
+
+        {/* Interactive IC Tester Simulator Hardware Modal */}
+        <ICTesterModal
+          isOpen={isICTesterOpen}
+          onClose={() => setIsICTesterOpen(false)}
+        />
+
+        {/* Interactive Arduino IoT Cloud Telemetry Dashboard Modal */}
+        <IoTDashboardModal
+          isOpen={isIoTDashboardOpen}
+          onClose={() => setIsIoTDashboardOpen(false)}
+        />
+
+        {/* Interactive E-Commerce REST API Explorer Testing Modal */}
+        <ApiTesterModal
+          isOpen={isApiTesterOpen}
+          onClose={() => setIsApiTesterOpen(false)}
         />
       </div>
     </ThemeProvider>

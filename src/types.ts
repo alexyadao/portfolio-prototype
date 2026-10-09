@@ -6,12 +6,23 @@ export interface ProjectLifecyclePhase {
   deliverables?: string[];
 }
 
+export interface CustomMetricAxis {
+  label: string;
+  shortLabel: string;
+  value: number;
+  color?: string;
+  icon?: string;
+}
+
 export interface ProjectMetrics {
   backendIntensity: number; // 0 - 100
   systemComplexity: number; // 0 - 100
   performanceOptimization: number; // 0 - 100
   hardwareInterfacing?: number; // 0 - 100
   securityReliability?: number; // 0 - 100
+  hardwareAxisLabel?: string;
+  hardwareAxisShortLabel?: string;
+  customAxes?: CustomMetricAxis[];
 }
 
 export interface ProjectDiagram {
@@ -26,12 +37,23 @@ export interface ProjectDiagram {
 export interface Project {
   id: string;
   title: string;
-  role: string;
+  subtitle?: string;
+  role?: string;
   category: 'backend' | 'embedded' | 'iot' | 'sysadmin' | string;
-  details: string;
-  tags: string[];
+  details?: string;
+  description?: string;
+  about?: string;
+  contributions?: string[];
+  tags?: string[];
+  technologies?: string[];
   highlights?: string[];
-  techStack: string[];
+  techStack?: string[];
+  liveDemoUrl?: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  featured?: boolean;
+  interactiveDemoId?: 'network-topology' | 'ic-tester' | 'iot-dashboard' | 'api-tester' | string;
+  interactiveDemoTitle?: string;
   lifecycle?: ProjectLifecyclePhase[];
   metrics?: ProjectMetrics;
   diagrams?: ProjectDiagram[];
@@ -64,6 +86,7 @@ export interface PersonalInfo {
   address: string;
   linkedin: string;
   github: string;
+  instagram?: string;
   status: string;
   institution: string;
 }

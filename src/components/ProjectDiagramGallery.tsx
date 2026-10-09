@@ -232,12 +232,12 @@ export const ProjectDiagramGallery: React.FC<ProjectDiagramGalleryProps> = ({ pr
                 <text x="15" y="65" fill="#cbd5e1" fontSize="10" fontFamily="monospace">BaaS Dart SDK</text>
               </g>
 
-              {/* React Web Portal */}
+              {/* Flutter Web Portal */}
               <g transform="translate(15, 180)">
                 <rect width="150" height="90" rx="8" fill="#1e293b" stroke="#6366f1" strokeWidth="1.2" />
-                <text x="15" y="25" fill="#818cf8" fontSize="12" fontWeight="bold" fontFamily="monospace">React Web App</text>
-                <text x="15" y="45" fill="#94a3b8" fontSize="10" fontFamily="monospace">Admin Portal</text>
-                <text x="15" y="65" fill="#cbd5e1" fontSize="10" fontFamily="monospace">REST & WebSockets</text>
+                <text x="15" y="25" fill="#818cf8" fontSize="12" fontWeight="bold" fontFamily="monospace">Flutter Web</text>
+                <text x="15" y="45" fill="#94a3b8" fontSize="10" fontFamily="monospace">Firebase Hosting</text>
+                <text x="15" y="65" fill="#cbd5e1" fontSize="10" fontFamily="monospace">Mapping APIs</text>
               </g>
             </g>
 
@@ -319,42 +319,74 @@ export const ProjectDiagramGallery: React.FC<ProjectDiagramGalleryProps> = ({ pr
             </text>
 
             {/* Sequence Flow Nodes */}
-            <g transform="translate(40, 90)">
-              {/* Step 1 */}
-              <rect x="0" y="0" width="130" height="75" rx="10" fill="#1e293b" stroke="#06b6d4" strokeWidth="1.5" />
-              <text x="12" y="24" fill="#38bdf8" fontSize="11" fontWeight="bold" fontFamily="monospace">1. Inbound Req</text>
-              <text x="12" y="46" fill="#94a3b8" fontSize="10" fontFamily="monospace">HTTP Authorization</text>
-              <text x="12" y="60" fill="#cbd5e1" fontSize="9" fontFamily="monospace">Bearer &lt;JWT&gt;</text>
+            <g transform="translate(30, 85)">
+              {/* Step 1: Inbound Request */}
+              <g transform="translate(0, 0)">
+                <rect width="150" height="85" rx="10" fill="#1e293b" stroke="#06b6d4" strokeWidth="1.5" />
+                <text x="75" y="26" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  1. Inbound Req
+                </text>
+                <text x="75" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  HTTP Authorization
+                </text>
+                <text x="75" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  Bearer &lt;JWT&gt;
+                </text>
+              </g>
 
-              {/* Arrow */}
-              <line x1="130" y1="37" x2="180" y2="37" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4 2" />
-              <polygon points="180,33 190,37 180,41" fill="#38bdf8" />
+              {/* Arrow 1 -> 2 */}
+              <line x1="150" y1="42.5" x2="190" y2="42.5" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4 2" />
+              <polygon points="190,38.5 198,42.5 190,46.5" fill="#38bdf8" />
 
               {/* Step 2: Validate JWT */}
-              <rect x="190" y="0" width="140" height="75" rx="10" fill="#1e293b" stroke="#6366f1" strokeWidth="1.5" />
-              <text x="12" y="24" fill="#818cf8" fontSize="11" fontWeight="bold" fontFamily="monospace">2. Token Verify</text>
-              <text x="12" y="46" fill="#94a3b8" fontSize="10" fontFamily="monospace">HMAC-SHA256 Sig</text>
-              <text x="12" y="60" fill="#cbd5e1" fontSize="9" fontFamily="monospace">Extract claims.role</text>
+              <g transform="translate(198, 0)">
+                <rect width="150" height="85" rx="10" fill="#1e293b" stroke="#6366f1" strokeWidth="1.5" />
+                <text x="75" y="26" fill="#818cf8" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  2. Token Verify
+                </text>
+                <text x="75" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  HMAC-SHA256 Sig
+                </text>
+                <text x="75" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  Extract claims.role
+                </text>
+              </g>
 
-              {/* Decision Diamond: Valid? */}
-              <line x1="330" y1="37" x2="380" y2="37" stroke="#6366f1" strokeWidth="2" />
-              <polygon points="380,33 390,37 380,41" fill="#6366f1" />
+              {/* Arrow 2 -> 3 */}
+              <line x1="348" y1="42.5" x2="388" y2="42.5" stroke="#6366f1" strokeWidth="2" />
+              <polygon points="388,38.5 396,42.5 388,46.5" fill="#6366f1" />
 
               {/* Step 3: RLS Evaluation */}
-              <rect x="390" y="0" width="160" height="75" rx="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
-              <text x="12" y="24" fill="#34d399" fontSize="11" fontWeight="bold" fontFamily="monospace">3. RLS Evaluator</text>
-              <text x="12" y="46" fill="#94a3b8" fontSize="10" fontFamily="monospace">Applies WHERE clause</text>
-              <text x="12" y="60" fill="#cbd5e1" fontSize="9" fontFamily="monospace">Filter user tenant_id</text>
+              <g transform="translate(396, 0)">
+                <rect width="155" height="85" rx="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
+                <text x="77.5" y="26" fill="#34d399" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  3. RLS Evaluator
+                </text>
+                <text x="77.5" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  Applies WHERE clause
+                </text>
+                <text x="77.5" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  Filter user tenant_id
+                </text>
+              </g>
 
-              {/* Arrow */}
-              <line x1="550" y1="37" x2="600" y2="37" stroke="#10b981" strokeWidth="2" />
-              <polygon points="600,33 610,37 600,41" fill="#10b981" />
+              {/* Arrow 3 -> 4 */}
+              <line x1="551" y1="42.5" x2="591" y2="42.5" stroke="#10b981" strokeWidth="2" />
+              <polygon points="591,38.5 599,42.5 591,46.5" fill="#10b981" />
 
               {/* Step 4: Postgres Execution */}
-              <rect x="610" y="0" width="140" height="75" rx="10" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" />
-              <text x="12" y="24" fill="#fbbf24" fontSize="11" fontWeight="bold" fontFamily="monospace">4. SQL Execution</text>
-              <text x="12" y="46" fill="#94a3b8" fontSize="10" fontFamily="monospace">Index Scan</text>
-              <text x="12" y="60" fill="#cbd5e1" fontSize="9" fontFamily="monospace">Execution &lt; 8ms</text>
+              <g transform="translate(599, 0)">
+                <rect width="145" height="85" rx="10" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" />
+                <text x="72.5" y="26" fill="#fbbf24" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  4. SQL Execution
+                </text>
+                <text x="72.5" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  Index Scan
+                </text>
+                <text x="72.5" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  Execution &lt; 8ms
+                </text>
+              </g>
             </g>
 
             {/* Detailed Terminal Log output preview */}
@@ -379,6 +411,115 @@ export const ProjectDiagramGallery: React.FC<ProjectDiagramGalleryProps> = ({ pr
         );
 
       // 2. Sysadmin Infra Diagrams
+      case 'it-provisioning-flow':
+      case 'os-deployment-pipeline':
+        return (
+          <svg
+            id={`diagram-svg-${id}`}
+            viewBox="0 0 800 480"
+            className="w-full h-auto max-h-[440px] select-none"
+          >
+            <rect width="800" height="480" fill="#090d16" rx="16" />
+            <text x="30" y="40" fill="#f8fafc" fontSize="15" fontWeight="bold" fontFamily="monospace">
+              ITSM_PIPELINE::ENTERPRISE_IT_PROVISIONING_WORKFLOW
+            </text>
+            <text x="30" y="60" fill="#64748b" fontSize="11" fontFamily="monospace">
+              Ascenders Business Inc. • Physical Workstation &amp; IAM Deployment
+            </text>
+
+            {/* Sequence Flow Nodes */}
+            <g transform="translate(30, 85)">
+              {/* Step 1: DingTalk Ticket Received */}
+              <g transform="translate(0, 0)">
+                <rect width="150" height="85" rx="10" fill="#1e293b" stroke="#06b6d4" strokeWidth="1.5" />
+                <text x="75" y="26" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  1. DingTalk Ticket
+                </text>
+                <text x="75" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  Ticket Received
+                </text>
+                <text x="75" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  ITSM Incident Intake
+                </text>
+              </g>
+
+              {/* Arrow 1 -> 2 */}
+              <line x1="150" y1="42.5" x2="190" y2="42.5" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4 2" />
+              <polygon points="190,38.5 198,42.5 190,46.5" fill="#38bdf8" />
+
+              {/* Step 2: LAN / Hardware Setup */}
+              <g transform="translate(198, 0)">
+                <rect width="150" height="85" rx="10" fill="#1e293b" stroke="#6366f1" strokeWidth="1.5" />
+                <text x="75" y="26" fill="#818cf8" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  2. LAN &amp; HW Setup
+                </text>
+                <text x="75" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  Hardware Staging
+                </text>
+                <text x="75" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  Cat6 Patch / VLAN 20
+                </text>
+              </g>
+
+              {/* Arrow 2 -> 3 */}
+              <line x1="348" y1="42.5" x2="388" y2="42.5" stroke="#6366f1" strokeWidth="2" />
+              <polygon points="388,38.5 396,42.5 388,46.5" fill="#6366f1" />
+
+              {/* Step 3: SQL/AD Account Provisioning */}
+              <g transform="translate(396, 0)">
+                <rect width="155" height="85" rx="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
+                <text x="77.5" y="26" fill="#34d399" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  3. SQL/AD Provision
+                </text>
+                <text x="77.5" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  IAM User Credentials
+                </text>
+                <text x="77.5" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  SQL Script &amp; OU GPO
+                </text>
+              </g>
+
+              {/* Arrow 3 -> 4 */}
+              <line x1="551" y1="42.5" x2="591" y2="42.5" stroke="#10b981" strokeWidth="2" />
+              <polygon points="591,38.5 599,42.5 591,46.5" fill="#10b981" />
+
+              {/* Step 4: Workstation Deployment */}
+              <g transform="translate(599, 0)">
+                <rect width="145" height="85" rx="10" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" />
+                <text x="72.5" y="26" fill="#fbbf24" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
+                  4. WS Deployment
+                </text>
+                <text x="72.5" y="47" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+                  Workstation Deploy
+                </text>
+                <text x="72.5" y="66" fill="#cbd5e1" fontSize="9" textAnchor="middle" fontFamily="monospace">
+                  Domain Joined &amp; Live
+                </text>
+              </g>
+            </g>
+
+            {/* Detailed ITSM & Diagnostic Terminal Log preview */}
+            <g transform="translate(30, 200)">
+              <rect width="740" height="250" rx="10" fill="#030712" stroke="#1f2937" strokeWidth="1.5" />
+              <rect width="740" height="30" rx="10" fill="#111827" />
+              <circle cx="20" cy="15" r="4.5" fill="#ef4444" />
+              <circle cx="36" cy="15" r="4.5" fill="#eab308" />
+              <circle cx="52" cy="15" r="4.5" fill="#22c55e" />
+              <text x="75" y="19" fill="#9ca3af" fontSize="11" fontFamily="monospace">dingtalk_itsm_provisioning_trace.log</text>
+
+              <g fill="#94a3b8" fontSize="11" fontFamily="monospace" transform="translate(20, 50)">
+                <text y="14" fill="#38bdf8">[08:30:12] DINGTALK::TICKET_RECEIVED: #ABI-9402 [Priority: High] &quot;New Agent Station Onboarding Bay 4B&quot;</text>
+                <text y="36" fill="#818cf8">[08:42:05] LAN_PROVISION: Patching Cat6 drop 10.16.4.42 to Cisco Switch Fa0/18 (VLAN 20: Agents)</text>
+                <text y="58" fill="#a78bfa">[08:55:18] HARDWARE_SETUP: Workstation ABI-WS-104 power-on self-test OK | RAM 16GB | SSD Health: 100%</text>
+                <text y="80" fill="#34d399">[09:12:44] SQL_IAM: Executing sp_create_agent_user.sql -&gt; Created DB role &amp; credentials for agent</text>
+                <text y="102" fill="#22c55e">[09:20:10] AD_PROVISION: User joined to OU=Operations,DC=ascenders,DC=local with enforced BitLocker GPO</text>
+                <text y="124" fill="#facc15">[09:35:22] DEPLOY_VERIFIED: Windows 10/11 Enterprise authenticated. IP assigned via DHCP. Speed test: 940Mbps</text>
+                <text y="146" fill="#64748b">[09:36:01] TICKET_CLOSED: Ticket #ABI-9402 marked RESOLVED in DingTalk ITSM. System operational uptime: 99.9%</text>
+              </g>
+            </g>
+          </svg>
+        );
+
       case 'ad-domain-topology':
         return (
           <svg
@@ -390,69 +531,72 @@ export const ProjectDiagramGallery: React.FC<ProjectDiagramGalleryProps> = ({ pr
             <text x="30" y="40" fill="#f8fafc" fontSize="15" fontWeight="bold" fontFamily="monospace">
               ENTERPRISE_TOPOLOGY::ACTIVE_DIRECTORY_OU_ARCHITECTURE
             </text>
+            <text x="30" y="60" fill="#64748b" fontSize="11" fontFamily="monospace">
+              Ascenders Business Inc. • Domain Controller &amp; Group Policy Distribution
+            </text>
 
             {/* Root Domain Controller */}
-            <g transform="translate(280, 70)">
+            <g transform="translate(280, 75)">
               <rect width="240" height="90" rx="10" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
               <text x="120" y="30" fill="#34d399" fontSize="13" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
-                ROOT DC (DC01.pup.local)
+                ROOT DC (DC01.ascenders.local)
               </text>
               <text x="120" y="52" fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="monospace">
                 Global Catalog | Kerberos KDC | DNS/DHCP
               </text>
               <text x="120" y="72" fill="#64748b" fontSize="10" textAnchor="middle" fontFamily="monospace">
-                Subnet: 192.168.10.0/24
+                Subnet: 10.16.0.0/20 (Ascenders Enterprise)
               </text>
             </g>
 
             {/* Tree Branch Lines */}
-            <path d="M 400 160 L 400 200 M 150 200 L 650 200 M 150 200 L 150 240 M 400 200 L 400 240 M 650 200 L 650 240" fill="none" stroke="#10b981" strokeWidth="2" />
+            <path d="M 400 165 L 400 205 M 150 205 L 650 205 M 150 205 L 150 240 M 400 205 L 400 240 M 650 205 L 650 240" fill="none" stroke="#10b981" strokeWidth="2" />
 
-            {/* OU 1: Administrative Staff */}
+            {/* OU 1: Operations & Agent Workstations */}
             <g transform="translate(60, 240)">
               <rect width="180" height="180" rx="10" fill="#111827" stroke="#38bdf8" strokeWidth="1.5" />
               <rect width="180" height="30" rx="10" fill="#0369a1" />
               <text x="90" y="20" fill="#ffffff" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
-                OU=Admin-Staff
+                OU=Operations-Agents
               </text>
               <g fontSize="10" fontFamily="monospace" fill="#94a3b8" transform="translate(14, 45)">
                 <text y="14" fill="#7dd3fc">• GPO: BitLocker Enforced</text>
-                <text y="32">• GPO: MFA Authentication</text>
+                <text y="32">• GPO: Screen Lock (5m)</text>
                 <text y="50">• Restricted USB Storage</text>
-                <text y="75" fill="#f8fafc">Workstations: 45 nodes</text>
-                <text y="95" fill="#34d399">OS: Win 11 Enterprise</text>
+                <text y="75" fill="#f8fafc">Workstations: 95 nodes</text>
+                <text y="95" fill="#34d399">OS: Win 10/11 Enterprise</text>
               </g>
             </g>
 
-            {/* OU 2: Faculty & Academics */}
+            {/* OU 2: Administrative & Finance Staff */}
             <g transform="translate(310, 240)">
               <rect width="180" height="180" rx="10" fill="#111827" stroke="#818cf8" strokeWidth="1.5" />
               <rect width="180" height="30" rx="10" fill="#4338ca" />
               <text x="90" y="20" fill="#ffffff" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
-                OU=Faculty-Staff
+                OU=Admin-Finance
               </text>
               <g fontSize="10" fontFamily="monospace" fill="#94a3b8" transform="translate(14, 45)">
-                <text y="14" fill="#a5b4fc">• GPO: Roaming Profiles</text>
-                <text y="32">• GPO: Intranet Mapped</text>
-                <text y="50">• Academic Software Pool</text>
-                <text y="75" fill="#f8fafc">Workstations: 120 nodes</text>
-                <text y="95" fill="#34d399">OS: Win 10/11 Pro</text>
+                <text y="14" fill="#a5b4fc">• GPO: BitLocker &amp; EFS</text>
+                <text y="32">• GPO: Shared Drives Map</text>
+                <text y="50">• Accounting &amp; ERP Pool</text>
+                <text y="75" fill="#f8fafc">Workstations: 35 nodes</text>
+                <text y="95" fill="#34d399">OS: Win 11 Enterprise</text>
               </g>
             </g>
 
-            {/* OU 3: Computer Engineering Labs */}
+            {/* OU 3: IT Support & Network Infrastructure */}
             <g transform="translate(560, 240)">
               <rect width="180" height="180" rx="10" fill="#111827" stroke="#f59e0b" strokeWidth="1.5" />
               <rect width="180" height="30" rx="10" fill="#b45309" />
               <text x="90" y="20" fill="#ffffff" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
-                OU=CpE-Laboratories
+                OU=IT-Infrastructure
               </text>
               <g fontSize="10" fontFamily="monospace" fill="#94a3b8" transform="translate(14, 45)">
-                <text y="14" fill="#fcd34d">• GPO: DeepFreeze Sandbox</text>
-                <text y="32">• GPO: Local Admin Lock</text>
-                <text y="50">• Arduino IDE &amp; C++ Toolchains</text>
-                <text y="75" fill="#f8fafc">Workstations: 80 nodes</text>
-                <text y="95" fill="#34d399">OS: Windows 11 Education</text>
+                <text y="14" fill="#fcd34d">• GPO: Admin Tier Access</text>
+                <text y="32">• GPO: Remote Management</text>
+                <text y="50">• PowerShell &amp; SQL Tools</text>
+                <text y="75" fill="#f8fafc">Workstations: 15 nodes</text>
+                <text y="95" fill="#34d399">DingTalk ITSM Console</text>
               </g>
             </g>
           </svg>

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Project } from '../types';
+import { ProjectHeaderIllustration } from './ProjectHeaderIllustration';
 import {
   FolderGit2,
   Database,
@@ -8,6 +9,9 @@ import {
   Radio,
   Server,
   ArrowUpRight,
+  ExternalLink,
+  Network,
+  Terminal,
   CheckCircle2,
   Tag,
   X,
@@ -18,11 +22,19 @@ import {
 interface ProjectsSectionProps {
   projects: Project[];
   onSelectProject: (project: Project) => void;
+  onOpenNetworkTopology?: () => void;
+  onOpenICTester?: () => void;
+  onOpenIoTDashboard?: () => void;
+  onOpenApiTester?: () => void;
 }
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   projects,
   onSelectProject,
+  onOpenNetworkTopology,
+  onOpenICTester,
+  onOpenIoTDashboard,
+  onOpenApiTester,
 }) => {
   // Search query filter (searches through title, details, tags, and highlights)
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -44,14 +56,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   const popularTags = useMemo(() => {
     return [
       'Backend',
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'C/C++',
+      'Dart',
+      'Flutter',
+      'PostgreSQL',
+      'Supabase',
+      'Firebase',
+      'Vercel',
+      'Active Directory',
       'System Admin',
       'Embedded',
-      'IoT',
-      'PostgreSQL',
-      'Active Directory',
-      'C++',
-      'Supabase',
-      'PowerShell',
+      'ESP32',
+      'SQL',
     ];
   }, []);
 
@@ -60,27 +80,32 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
     const query = searchQuery.trim().toLowerCase();
 
     return projects.filter((project) => {
-      // 1. Check search query match (title, details, role, tags, techStack, highlights)
+      // 1. Check search query match (title, details, description, role, subtitle, tags, technologies, techStack, highlights)
+      const tagsList = project.tags || project.technologies || [];
+      const techList = project.techStack || [];
       const matchesSearch =
         !query ||
         project.title.toLowerCase().includes(query) ||
-        project.details.toLowerCase().includes(query) ||
-        project.role.toLowerCase().includes(query) ||
-        project.tags.some((t) => t.toLowerCase().includes(query)) ||
-        project.techStack.some((t) => t.toLowerCase().includes(query)) ||
+        (project.details && project.details.toLowerCase().includes(query)) ||
+        (project.description && project.description.toLowerCase().includes(query)) ||
+        (project.role && project.role.toLowerCase().includes(query)) ||
+        (project.subtitle && project.subtitle.toLowerCase().includes(query)) ||
+        tagsList.some((t) => t.toLowerCase().includes(query)) ||
+        techList.some((t) => t.toLowerCase().includes(query)) ||
         (project.highlights && project.highlights.some((h) => h.toLowerCase().includes(query)));
 
       // 2. Check category match
       const matchesCategory =
         activeCategory === 'all' ||
         project.category === activeCategory ||
-        (activeCategory === 'sysadmin' && project.category === 'sysadmin');
+        (activeCategory === 'backend' && project.category.toLowerCase().includes('backend')) ||
+        (activeCategory === 'sysadmin' && (project.category === 'sysadmin' || project.category.toLowerCase().includes('operations')));
 
       // 3. Check tag match if active
       const matchesTag = selectedTag
-        ? project.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase()) ||
-          project.techStack.some((t) => t.toLowerCase() === selectedTag.toLowerCase()) ||
-          project.category.toLowerCase() === selectedTag.toLowerCase()
+        ? tagsList.some((t) => t.toLowerCase() === selectedTag.toLowerCase()) ||
+          techList.some((t) => t.toLowerCase() === selectedTag.toLowerCase()) ||
+          project.category.toLowerCase().includes(selectedTag.toLowerCase())
         : true;
 
       return matchesSearch && matchesCategory && matchesTag;
@@ -323,12 +348,17 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                     scale: 1.02,
                     transition: { duration: 0.25, ease: 'easeOut' },
                   }}
-                  className="group relative bg-white/90 dark:bg-zinc-900/60 hover:bg-white dark:hover:bg-zinc-900/95 border border-zinc-200/90 dark:border-zinc-800/90 hover:border-cyan-500/50 dark:hover:border-cyan-400/50 rounded-2xl p-6 flex flex-col justify-between backdrop-blur-xl shadow-lg shadow-zinc-200/50 dark:shadow-xl hover:shadow-2xl hover:shadow-cyan-500/10 dark:hover:shadow-cyan-500/15 dark:hover:shadow-black/70 transition-all duration-300"
+                  className="group relative bg-white/90 dark:bg-zinc-900/60 hover:bg-white dark:hover:bg-zinc-900/95 border border-zinc-200/90 dark:border-zinc-800/90 hover:border-cyan-500/50 dark:hover:border-cyan-400/50 rounded-2xl flex flex-col justify-between backdrop-blur-xl shadow-lg shadow-zinc-200/50 dark:shadow-xl hover:shadow-2xl hover:shadow-cyan-500/10 dark:hover:shadow-cyan-500/15 dark:hover:shadow-black/70 transition-all duration-300 overflow-hidden"
                 >
                   {/* Subtle Interactive Hover Ambient Glow */}
                   <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-cyan-500/0 via-indigo-500/0 to-cyan-500/0 group-hover:from-cyan-500/5 group-hover:via-indigo-500/5 group-hover:to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  <div>
-                    {/* Header with Category Icon & Role Badge */}
+
+                  {/* High-Fidelity Code-Generated Project Header Illustration */}
+                  <ProjectHeaderIllustration projectId={project.id} />
+
+                  <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
+                    <div>
+                      {/* Header with Category Icon & Role Badge */}
                     <div className="flex items-center justify-between gap-2 mb-4">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
@@ -339,9 +369,16 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                         </span>
                       </div>
 
-                      <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/50">
-                        {project.role}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {project.featured && (
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                            ★ FEATURED
+                          </span>
+                        )}
+                        <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/50">
+                          {project.subtitle || project.role}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Project Title */}
@@ -351,7 +388,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
 
                     {/* Exact Details Provided by User */}
                     <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed mb-5 bg-zinc-50 dark:bg-zinc-950/40 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800/60">
-                      {project.details}
+                      {project.description || project.details}
                     </p>
 
                     {/* Key Architectural Highlights */}
@@ -370,7 +407,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   <div>
                     {/* Interactive Tech Stack Pills - Clickable to Filter */}
                     <div className="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-200 dark:border-zinc-800/80 mb-4">
-                      {project.tags.map((tag) => {
+                      {(project.tags || project.technologies || []).map((tag) => {
                         const isTagActive = selectedTag?.toLowerCase() === tag.toLowerCase();
                         return (
                           <button
@@ -390,16 +427,124 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                       })}
                     </div>
 
-                    {/* Interactive Modal Inspection Trigger */}
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      type="button"
-                      onClick={() => onSelectProject(project)}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
-                    >
-                      <span>Inspect System Architecture</span>
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </motion.button>
+                    {/* Interactive Modal Inspection & Live Demo Triggers */}
+                    {project.liveUrl || project.liveDemoUrl ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+                        <a
+                          href={project.liveUrl || project.liveDemoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 text-white font-medium py-2 rounded-xl flex items-center justify-center gap-1.5 text-sm transition-all hover:opacity-90 shadow-lg shadow-cyan-500/20 text-center"
+                        >
+                          <span>Live Demo</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onSelectProject(project)}
+                          className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
+                        >
+                          <span>Inspect System Architecture</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
+                        </motion.button>
+                      </div>
+                    ) : project.interactiveDemoId === 'network-topology' ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onOpenNetworkTopology?.()}
+                          className="bg-gradient-to-r from-cyan-500 via-indigo-600 to-blue-600 hover:from-cyan-400 hover:via-indigo-500 hover:to-blue-500 text-white font-medium py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm transition-all hover:opacity-95 shadow-lg shadow-cyan-500/20 text-center cursor-pointer"
+                        >
+                          <Network className="w-3.5 h-3.5 shrink-0" />
+                          <span>Interactive Network Map</span>
+                        </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onSelectProject(project)}
+                          className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
+                        >
+                          <span>Inspect System Architecture</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
+                        </motion.button>
+                      </div>
+                    ) : project.interactiveDemoId === 'ic-tester' ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onOpenICTester?.()}
+                          className="bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-400 hover:via-teal-500 hover:to-cyan-500 text-white font-medium py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm transition-all hover:opacity-95 shadow-lg shadow-emerald-500/20 text-center cursor-pointer"
+                        >
+                          <Cpu className="w-3.5 h-3.5 shrink-0" />
+                          <span>Run Hardware Simulator</span>
+                        </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onSelectProject(project)}
+                          className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
+                        >
+                          <span>Inspect System Architecture</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
+                        </motion.button>
+                      </div>
+                    ) : project.interactiveDemoId === 'iot-dashboard' ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onOpenIoTDashboard?.()}
+                          className="bg-gradient-to-r from-amber-500 via-teal-600 to-cyan-600 hover:from-amber-400 hover:via-teal-500 hover:to-cyan-500 text-white font-medium py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm transition-all hover:opacity-95 shadow-lg shadow-teal-500/20 text-center cursor-pointer"
+                        >
+                          <Radio className="w-3.5 h-3.5 shrink-0" />
+                          <span>Open IoT Dashboard</span>
+                        </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onSelectProject(project)}
+                          className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
+                        >
+                          <span>Inspect System Architecture</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
+                        </motion.button>
+                      </div>
+                    ) : project.interactiveDemoId === 'api-tester' ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onOpenApiTester?.()}
+                          className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:via-indigo-500 hover:to-cyan-500 text-white font-medium py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm transition-all hover:opacity-95 shadow-lg shadow-indigo-500/20 text-center cursor-pointer"
+                        >
+                          <Terminal className="w-3.5 h-3.5 shrink-0" />
+                          <span>Test API Endpoints</span>
+                        </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => onSelectProject(project)}
+                          className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
+                        >
+                          <span>Inspect System Architecture</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
+                        </motion.button>
+                      </div>
+                    ) : (
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        onClick={() => onSelectProject(project)}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 hover:border-cyan-500/50 transition-all group-hover:text-cyan-600 dark:group-hover:text-cyan-300"
+                      >
+                        <span>Inspect System Architecture</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </motion.button>
+                    )}
+                  </div>
                   </div>
                 </motion.div>
               ))}

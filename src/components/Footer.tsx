@@ -10,7 +10,6 @@ import {
   Check,
   ExternalLink,
   MapPin,
-  Sparkles,
   Send,
   Terminal,
   FolderGit2,
@@ -254,8 +253,8 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Quick Navigation Links & Phone Support */}
-        <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80">
-          <nav className="flex items-center flex-wrap gap-2 text-xs font-medium">
+        <div className="py-6 flex flex-wrap items-center justify-center md:justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80">
+          <nav className="flex items-center justify-center md:justify-start flex-wrap gap-2 text-xs font-medium">
             <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 mr-2">
               Navigate:
             </span>
@@ -294,16 +293,8 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Metadata & Legal Bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-zinc-500 font-mono text-[11px]">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 text-zinc-500 font-mono text-[11px] text-center sm:text-left">
           <p>© {currentYear} {PERSONAL_INFO.name}. All rights reserved.</p>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-              <Sparkles className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
-              <span>BS Computer Engineering Graduate</span>
-            </span>
-            <span>•</span>
-            <span className="text-zinc-600 dark:text-zinc-400">{PERSONAL_INFO.institution}</span>
-          </div>
         </div>
       </div>
     </footer>

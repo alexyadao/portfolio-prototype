@@ -12,6 +12,7 @@ import { GitHubContributionGraph } from './GitHubContributionGraph';
 
 export const SkillsSection: React.FC = () => {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const totalSkillsCount = SKILL_GROUPS.reduce((acc, g) => acc + g.skills.length, 0);
 
   const getGroupIcon = (type: 'os' | 'code' | 'database') => {
     switch (type) {
@@ -46,7 +47,7 @@ export const SkillsSection: React.FC = () => {
 
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 rounded-lg shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400" />
-            <span>13 Core Competencies Verified</span>
+            <span>{totalSkillsCount} Core Competencies Verified</span>
           </div>
         </div>
 

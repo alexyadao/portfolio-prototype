@@ -175,19 +175,19 @@ export const GitHubContributionGraph: React.FC<GitHubContributionGraphProps> = (
 
       {/* Calendar Bottom Telemetry Footnotes */}
       <div className="mt-5 pt-4 border-t border-dashed border-zinc-200 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-zinc-500 dark:text-zinc-400">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <GitBranch className="w-3.5 h-3.5 text-cyan-500" />
+        <div className="flex flex-col items-start sm:flex-row sm:items-center flex-wrap gap-2 sm:gap-3">
+          <div className="flex items-center flex-wrap gap-1.5">
+            <GitBranch className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
             <span>Target:</span>
             <span className="font-semibold text-zinc-800 dark:text-zinc-200">
               github.com/{username}
             </span>
           </div>
 
-          <span>•</span>
+          <span className="hidden sm:inline">•</span>
 
-          <div className="flex items-center gap-1.5">
-            <Flame className="w-3.5 h-3.5 text-amber-500" />
+          <div className="flex items-center flex-wrap gap-1.5">
+            <Flame className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <span>Active Repositories:</span>
             <span className="font-semibold text-zinc-800 dark:text-zinc-200">
               C++, TypeScript, SQL, Microcontrollers

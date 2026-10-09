@@ -7,6 +7,10 @@ import {
   ShieldCheck,
   Zap,
   Layers,
+  Compass,
+  Network,
+  Monitor,
+  MessageSquare,
 } from 'lucide-react';
 
 interface TechStackRadarChartProps {
@@ -16,49 +20,77 @@ interface TechStackRadarChartProps {
 export const TechStackRadarChart: React.FC<TechStackRadarChartProps> = ({ metrics }) => {
   const [activeAxisIndex, setActiveAxisIndex] = useState<number | null>(null);
 
-  // Define the 5 core architectural evaluation axes
-  const axes = [
-    {
-      key: 'backendIntensity',
-      label: 'Backend Intensity',
-      shortLabel: 'Backend',
-      value: metrics.backendIntensity ?? 80,
-      icon: Database,
-      color: '#06b6d4', // cyan-500
-    },
-    {
-      key: 'systemComplexity',
-      label: 'System Complexity',
-      shortLabel: 'Complexity',
-      value: metrics.systemComplexity ?? 85,
-      icon: Layers,
-      color: '#6366f1', // indigo-500
-    },
-    {
-      key: 'performanceOptimization',
-      label: 'Performance Optimization',
-      shortLabel: 'Performance',
-      value: metrics.performanceOptimization ?? 90,
-      icon: Zap,
-      color: '#10b981', // emerald-500
-    },
-    {
-      key: 'hardwareInterfacing',
-      label: 'Hardware & Embedded',
-      shortLabel: 'Hardware',
-      value: metrics.hardwareInterfacing ?? 50,
-      icon: Cpu,
-      color: '#f59e0b', // amber-500
-    },
-    {
-      key: 'securityReliability',
-      label: 'Security & Reliability',
-      shortLabel: 'Security',
-      value: metrics.securityReliability ?? 85,
-      icon: ShieldCheck,
-      color: '#8b5cf6', // violet-500
-    },
-  ];
+  // Define architectural evaluation axes (supports custom project axes or default 5-axis matrix)
+  const axes = (metrics.customAxes && metrics.customAxes.length >= 3)
+    ? metrics.customAxes.map((ca, idx) => {
+        let IconComp = Activity;
+        const lowerLabel = ca.label.toLowerCase();
+        if (ca.icon === 'monitor' || lowerLabel.includes('hardware') || lowerLabel.includes('workstation')) {
+          IconComp = Monitor;
+        } else if (ca.icon === 'network' || lowerLabel.includes('network') || lowerLabel.includes('lan')) {
+          IconComp = Network;
+        } else if (ca.icon === 'shield' || lowerLabel.includes('security') || lowerLabel.includes('identity')) {
+          IconComp = ShieldCheck;
+        } else if (ca.icon === 'message' || lowerLabel.includes('dingtalk') || lowerLabel.includes('itsm') || lowerLabel.includes('support')) {
+          IconComp = MessageSquare;
+        } else if (ca.icon === 'activity' || lowerLabel.includes('uptime') || lowerLabel.includes('performance')) {
+          IconComp = Activity;
+        } else if (lowerLabel.includes('database') || lowerLabel.includes('backend')) {
+          IconComp = Database;
+        }
+
+        const fallbackColors = ['#06b6d4', '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899'];
+        return {
+          key: `custom-axis-${idx}`,
+          label: ca.label,
+          shortLabel: ca.shortLabel || ca.label,
+          value: ca.value,
+          icon: IconComp,
+          color: ca.color || fallbackColors[idx % fallbackColors.length],
+        };
+      })
+    : [
+        {
+          key: 'backendIntensity',
+          label: 'Backend Intensity',
+          shortLabel: 'Backend',
+          value: metrics.backendIntensity ?? 80,
+          icon: Database,
+          color: '#06b6d4', // cyan-500
+        },
+        {
+          key: 'systemComplexity',
+          label: 'System Complexity',
+          shortLabel: 'Complexity',
+          value: metrics.systemComplexity ?? 85,
+          icon: Layers,
+          color: '#6366f1', // indigo-500
+        },
+        {
+          key: 'performanceOptimization',
+          label: 'Performance Optimization',
+          shortLabel: 'Performance',
+          value: metrics.performanceOptimization ?? 90,
+          icon: Zap,
+          color: '#10b981', // emerald-500
+        },
+        {
+          key: 'hardwareInterfacing',
+          label: metrics.hardwareAxisLabel || 'Hardware & Embedded',
+          shortLabel: metrics.hardwareAxisShortLabel || (metrics.hardwareAxisLabel ? 'UI & Map' : 'Hardware'),
+          value: metrics.hardwareInterfacing ?? 50,
+          icon: metrics.hardwareAxisLabel?.includes('Mapping') || metrics.hardwareAxisLabel?.includes('Frontend') ? Compass : Cpu,
+          color: '#f59e0b', // amber-500
+        },
+        {
+          key: 'securityReliability',
+          label: 'Security & Reliability',
+          shortLabel: 'Security',
+          value: metrics.securityReliability ?? 85,
+          icon: ShieldCheck,
+          color: '#8b5cf6', // violet-500
+        },
+      ];
 
   const numAxes = axes.length;
   const size = 260;

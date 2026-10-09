@@ -18,10 +18,9 @@ import {
 
 interface NavbarProps {
   onOpenTerminal: () => void;
-  onOpenResume?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal, onOpenResume }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -62,9 +61,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal, onOpenResume }) 
           <div className="flex flex-col">
             <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors tracking-tight">
               {PERSONAL_INFO.name}
-            </span>
-            <span className="text-[11px] text-zinc-500 dark:text-zinc-400 font-mono flex items-center gap-1">
-              <span className="text-cyan-600 dark:text-cyan-400 font-semibold">PUP</span> • Computer Engineering
             </span>
           </div>
         </a>
@@ -129,16 +125,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal, onOpenResume }) 
           </button>
 
           {/* Original CV / Resume Button */}
-          {onOpenResume && (
-            <button
-              type="button"
-              onClick={onOpenResume}
-              className="px-3 py-1.5 rounded-xl text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900/70 border border-zinc-300/80 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 hover:text-zinc-950 dark:hover:text-white transition-all"
-              title="View & Print CV"
-            >
-              CV / Resume
-            </button>
-          )}
+          <a
+            href="/Alexander_Yadao_CV.pdf"
+            download="Alexander_Yadao_CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 rounded-xl text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900/70 border border-zinc-300/80 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 hover:text-zinc-950 dark:hover:text-white transition-all inline-block"
+            title="Download official CV"
+          >
+            CV / Resume
+          </a>
 
           <a
             href={PERSONAL_INFO.linkedin}
@@ -216,18 +212,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal, onOpenResume }) 
             );
           })}
           <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 flex flex-col gap-2">
-            {onOpenResume && (
-              <button
-                type="button"
-                onClick={() => {
-                  onOpenResume();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full py-2 text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800"
-              >
-                CV / Resume
-              </button>
-            )}
+            <a
+              href="/Alexander_Yadao_CV.pdf"
+              download="Alexander_Yadao_CV.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center py-2 text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 block"
+            >
+              CV / Resume
+            </a>
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}

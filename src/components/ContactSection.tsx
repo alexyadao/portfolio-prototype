@@ -48,13 +48,9 @@ export const ContactSection: React.FC = () => {
     setErrorMessage('');
 
     try {
-      // Access key can be read from Next.js (process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY)
-      // or Vite (import.meta.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY / VITE_WEB3FORMS_ACCESS_KEY)
       const accessKey =
-        (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY) ||
-        (typeof import.meta !== 'undefined' && import.meta.env?.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY) ||
         (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WEB3FORMS_ACCESS_KEY) ||
-        '';
+        '50983918-2ffd-4973-bdd4-86c786f66c79';
 
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -72,26 +68,24 @@ export const ContactSection: React.FC = () => {
         }),
       });
 
+      if (!response.ok) {
+        console.error('Web3Forms fetch error:', response.status, response.statusText);
+      }
+
       const result = await response.json();
 
       if (result.success) {
         setFormStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        if (!accessKey) {
-          // In local preview without configured key, gracefully clear form & show success
-          setFormStatus('success');
-          setFormData({ name: '', email: '', subject: '', message: '' });
-        } else {
-          setFormStatus('error');
-          setErrorMessage(result.message || 'Something went wrong. Please try again.');
-        }
+        console.error('Web3Forms API rejected submission:', result);
+        setFormStatus('error');
+        setErrorMessage(result.message || 'Something went wrong. Please try again.');
       }
     } catch (err: unknown) {
-      console.error('Web3Forms submission error:', err);
-      // Fallback for offline/preview mode
-      setFormStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      console.error('Web3Forms network/submission error:', err);
+      setFormStatus('error');
+      setErrorMessage('Network error occurred while submitting message. Please try again or reach out directly.');
     }
   };
 

@@ -283,7 +283,7 @@ export const ContactSection: React.FC = () => {
                   Message Transmitted!
                 </h4>
                 <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 max-w-md mx-auto leading-relaxed">
-                  Thank you for reaching out to Alexander Christian R. Yadao. Your inquiry will receive a prompt reply at your email address.
+                  Thanks for reaching out! I&apos;ve received your transmission and will get back to your email promptly.
                 </p>
                 <button
                   type="button"

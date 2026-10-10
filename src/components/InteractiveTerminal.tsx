@@ -166,7 +166,7 @@ export const InteractiveTerminal: React.FC = () => {
     if (cmd === 'help') {
       outputType = 'output';
       outputText = `Available commands:
-  whoami    - Display Alexander Christian R. Yadao's profile and bio
+  whoami    - Print my background, core engineering focus, and bio
   skills    - List verified technical competencies and tools
   projects  - Inspect featured backend, embedded, and IoT projects
   clear     - Wipe all terminal screen output`;
@@ -244,7 +244,7 @@ Tech: ${p.tags.join(', ')}`
               Interactive Terminal
             </h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-              Explore Alexander&apos;s credentials, projects, and skills through an authentic, simulated command line interface with real-time output typing.
+              Explore my background, system projects, and technical skills through an interactive command-line interface.
             </p>
           </div>
 

@@ -69,10 +69,7 @@ export const GitHubContributionGraph: React.FC<GitHubContributionGraphProps> = (
           </h3>
 
           <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1 max-w-xl">
-            Live commit history, repository contributions, and open-source milestones fetched directly for{' '}
-            <strong className="text-zinc-900 dark:text-zinc-100 font-mono font-semibold">
-              @{username}
-            </strong>.
+            Real-time commit activity, repository logs, and technical milestones synchronized from my GitHub profile.
           </p>
         </div>
 

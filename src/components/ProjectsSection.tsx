@@ -127,6 +127,55 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
     }
   };
 
+  const getProjectBadges = (proj: Project) => {
+    switch (proj.id) {
+      case 'solar-iot-tracking':
+      case 'solar-iot':
+        return {
+          category: '((•)) IoT',
+          role: 'Project Lead & Embedded IoT Developer',
+        };
+      case 'examcraft-studio':
+        return {
+          category: '💻 Full-Stack Web / Backend',
+          role: 'Technical Exam & Assessment Engine',
+        };
+      case 'opsflow-it-helpdesk':
+        return {
+          category: '⚙️ IT Operations / Full-Stack',
+          role: 'Enterprise ITSM & Infrastructure Manager',
+        };
+      case 'campus-infra-app':
+      case 'campus-school-infra':
+        return {
+          category: '🗄️ Backend Architecture',
+          role: 'Backend Developer & Cloud Infrastructure',
+        };
+      case 'enterprise-sysadmin-infra':
+        return {
+          category: '🖥️ IT Operations',
+          role: 'Junior System Admin',
+        };
+      case 'pmct-001':
+        return {
+          category: '⚡ Embedded Hardware',
+          role: 'Hardware & Embedded Systems Engineer',
+        };
+      default:
+        return {
+          category:
+            proj.category === 'iot'
+              ? '((•)) IoT'
+              : proj.category === 'sysadmin'
+              ? '⚙️ IT Operations'
+              : proj.category === 'embedded'
+              ? '⚡ Embedded Hardware'
+              : '🗄️ Backend Architecture',
+          role: proj.role || 'Engineering Lead',
+        };
+    }
+  };
+
   const handleCategoryClick = (catId: string) => {
     setActiveCategory(catId);
     if (selectedTag) {
@@ -353,33 +402,32 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   {/* Subtle Interactive Hover Ambient Glow */}
                   <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-cyan-500/0 via-indigo-500/0 to-cyan-500/0 group-hover:from-cyan-500/5 group-hover:via-indigo-500/5 group-hover:to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
+                  {/* Floating Featured Tag if featured */}
+                  {project.featured && (
+                    <div className="absolute top-2.5 right-3 z-20 pointer-events-none">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border border-cyan-500/20 bg-cyan-950/40 text-cyan-400 backdrop-blur-md shadow-sm">
+                        ★ FEATURED
+                      </span>
+                    </div>
+                  )}
+
                   {/* High-Fidelity Code-Generated Project Header Illustration */}
                   <ProjectHeaderIllustration projectId={project.id} />
 
                   <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                     <div>
-                      {/* Header with Category Icon & Role Badge */}
-                    <div className="flex items-center justify-between gap-2 mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
-                          {getCategoryIcon(project.category)}
+                      {/* Clean 2-Badge Row: Category on Left, Role on Right (Wrap-friendly without text clipping) */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 w-full">
+                        {/* Left Badge: Category */}
+                        <div className="inline-flex items-center text-xs font-mono px-2.5 py-1 rounded border border-cyan-500/20 bg-cyan-950/30 text-cyan-400">
+                          <span>{getProjectBadges(project).category}</span>
                         </div>
-                        <span className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
-                          {project.category === 'sysadmin' ? 'SYSTEM ADMIN' : project.category.toUpperCase()}
-                        </span>
-                      </div>
 
-                      <div className="flex items-center gap-1.5">
-                        {project.featured && (
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                            ★ FEATURED
-                          </span>
-                        )}
-                        <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/50">
-                          {project.subtitle || project.role}
-                        </span>
+                        {/* Right Badge: Role */}
+                        <div className="inline-flex items-center text-xs font-mono px-2.5 py-1 rounded border border-cyan-500/20 bg-cyan-950/30 text-cyan-400 max-w-full text-right">
+                          <span>{getProjectBadges(project).role}</span>
+                        </div>
                       </div>
-                    </div>
 
                     {/* Project Title */}
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors tracking-tight mb-2">

@@ -58,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal }) => {
   };
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden transition-colors duration-300">
+    <section id="hero" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden transition-colors duration-300">
       {/* Spatial Ambient Glows with gentle breathing animation */}
       <motion.div
         animate={{

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { useTheme } from '../context/ThemeContext';
+import { Logo } from './Logo';
 import {
   Code2,
   Terminal,
@@ -51,13 +52,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal }) => {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         {/* Spatial Brand Identity */}
-        <a href="#" className="flex items-center gap-3 group focus:outline-none">
-          <div className="relative">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 via-indigo-500/30 to-violet-500/20 border border-cyan-500/30 text-cyan-600 dark:text-cyan-300 flex items-center justify-center font-bold text-sm shadow-inner group-hover:border-cyan-400/60 transition-all duration-300">
-              {PERSONAL_INFO.monogram}
-            </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white dark:ring-zinc-950" />
-          </div>
+        <a href="#hero" className="flex items-center gap-3 group focus:outline-none">
+          <Logo />
           <div className="flex flex-col">
             <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors tracking-tight">
               {PERSONAL_INFO.name}
@@ -85,43 +81,55 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal }) => {
 
         {/* Right Action Widgets */}
         <div className="hidden sm:flex items-center gap-2">
-          {/* High-End Theme Toggle Switch */}
+          {/* High-End Theme Toggle Switch with Smooth Fade Transitions */}
           <button
             type="button"
             onClick={toggleTheme}
-            className="relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-300/80 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-zinc-700 dark:text-zinc-300"
+            className="relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-300/80 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors duration-300 text-zinc-700 dark:text-zinc-300 shadow-sm cursor-pointer"
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            <div className="relative w-5 h-5 flex items-center justify-center">
-              <motion.div
-                initial={false}
-                animate={{
-                  scale: theme === 'dark' ? 1 : 0,
-                  rotate: theme === 'dark' ? 0 : 90,
-                  opacity: theme === 'dark' ? 1 : 0,
-                }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <Moon className="w-4 h-4 text-cyan-400 fill-cyan-400/20" />
-              </motion.div>
-              <motion.div
-                initial={false}
-                animate={{
-                  scale: theme === 'light' ? 1 : 0,
-                  rotate: theme === 'light' ? 0 : -90,
-                  opacity: theme === 'light' ? 1 : 0,
-                }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <Sun className="w-4 h-4 text-amber-500 fill-amber-500/20" />
-              </motion.div>
+            <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                {theme === 'dark' ? (
+                  <motion.div
+                    key="desktop-dark"
+                    initial={{ opacity: 0, rotate: -40, scale: 0.6 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                    exit={{ opacity: 0, rotate: 40, scale: 0.6 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex items-center justify-center"
+                  >
+                    <Moon className="w-4 h-4 text-cyan-400 fill-cyan-400/20" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="desktop-light"
+                    initial={{ opacity: 0, rotate: 40, scale: 0.6 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                    exit={{ opacity: 0, rotate: -40, scale: 0.6 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex items-center justify-center"
+                  >
+                    <Sun className="w-4 h-4 text-amber-500 fill-amber-500/20" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <span className="font-mono text-[11px] capitalize hidden lg:inline">
-              {theme}
-            </span>
+            <div className="overflow-hidden hidden lg:block h-4 leading-4">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={theme}
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="font-mono text-[11px] capitalize block select-none"
+                >
+                  {theme}
+                </motion.span>
+              </AnimatePresence>
+            </div>
           </button>
 
           {/* Original CV / Resume Button */}
@@ -157,18 +165,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTerminal }) => {
 
         {/* Mobile controls: Theme toggle + Hamburger */}
         <div className="md:hidden flex items-center gap-2">
-          {/* Mobile Theme Toggle */}
+          {/* Mobile Theme Toggle with Smooth Fade Transition */}
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-lg text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800"
-            aria-label="Toggle theme"
+            className="relative p-2 rounded-lg text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 transition-colors duration-300 w-9 h-9 flex items-center justify-center overflow-hidden cursor-pointer"
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            {theme === 'dark' ? (
-              <Moon className="w-4 h-4 text-cyan-400" />
-            ) : (
-              <Sun className="w-4 h-4 text-amber-500" />
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              {theme === 'dark' ? (
+                <motion.div
+                  key="mobile-dark"
+                  initial={{ opacity: 0, rotate: -40, scale: 0.6 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: 40, scale: 0.6 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center justify-center"
+                >
+                  <Moon className="w-4 h-4 text-cyan-400" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="mobile-light"
+                  initial={{ opacity: 0, rotate: 40, scale: 0.6 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: -40, scale: 0.6 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center justify-center"
+                >
+                  <Sun className="w-4 h-4 text-amber-500" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </button>
 
           <a
